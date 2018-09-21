@@ -9,15 +9,18 @@ else
 fi
 
 for i in $BOXES; do
-  if [ -d "$i" ]; then
-    case $CMD in
+  if [ -d "${i}" ]; then
+    tag="${i//\//-}"
+    tag="${tag//-base/}"
+
+    case "${CMD}" in
     build)
-      echo "Building $i..."
-      docker build -t makebox_${i//\//_} $i/
-      docker tag makebox_${i//\//_} ghetzel/makebox:${i//\//-}
+      echo "Building ${i} (tag: ${tag})..."
+      docker build -t makebox_${tag//-/_} $i/
+      docker tag makebox_${tag//-/_} ghetzel/makebox:${tag}
       ;;
     push)
-      docker push ghetzel/makebox:${i//\//-}
+      docker push ghetzel/makebox:${tag}
       ;;
     esac
   fi
